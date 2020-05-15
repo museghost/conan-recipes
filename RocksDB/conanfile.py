@@ -41,7 +41,7 @@ class RocksDBConan(ConanFile):
     def build(self):
         # temp patch
         search_path = "{0}/CMakeLists.txt".format(self.source_subfolder)
-        tools.replace_in_file(search_path, r"find_package(ZLIB REQUIRED)", r"find_package(zlib REQUIRED)")
+        #tools.replace_in_file(search_path, r"find_package(ZLIB REQUIRED)", r"find_package(zlib REQUIRED)")
         #tools.replace_in_file(search_path, r"ZLIB::ZLIB", r"zlib::zlib")
         tools.replace_in_file(search_path, r"find_package(BZip2 REQUIRED)", r"find_package(bzip2 REQUIRED)")
         tools.replace_in_file(search_path, r"list(APPEND THIRDPARTY_LIBS ${BZIP2_LIBRARIES})", r"list(APPEND THIRDPARTY_LIBS bzip2::bzip2)")
