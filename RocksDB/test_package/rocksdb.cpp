@@ -12,5 +12,7 @@ int main()
 
   assert(status.ok());
 
+  delete db;
+
   return 0;
 }
