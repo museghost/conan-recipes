@@ -65,7 +65,7 @@ class RocksDBConan(ConanFile):
         if self.settings.compiler == "clang":
             cmake.definitions["CMAKE_CXX_FLAGS"] = "-Wshadow -pedantic -fvisibility-inlines-hidden -Wgnu-statement-expression, -Wgnu-zero-variadic-macro-arguments"
         elif self.settings.compiler == "gcc":
-            cmake.definitions["CMAKE_CXX_FLAGS"] = "-Wshadow -pedantic -fvisibility-inlines-hidden"
+            cmake.definitions["CMAKE_CXX_FLAGS"] = "-fvisibility-inlines-hidden"
 
         cmake.configure(
                 #source_folder=self.source_subfolder,
