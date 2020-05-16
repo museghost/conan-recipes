@@ -41,8 +41,9 @@ class RocksDBConan(ConanFile):
     def build(self):
         # temp patch
         search_path = "{0}/CMakeLists.txt".format(self.source_subfolder)
-        #tools.replace_in_file(search_path, r"find_package(ZLIB REQUIRED)", r"find_package(zlib REQUIRED)")
-        #tools.replace_in_file(search_path, r"ZLIB::ZLIB", r"zlib::zlib")
+        if self.settings.os == "Macos":
+            tools.replace_in_file(search_path, r"find_package(ZLIB REQUIRED)", r"find_package(zlib REQUIRED)")
+            tools.replace_in_file(search_path, r"ZLIB::ZLIB", r"zlib::zlib")
         tools.replace_in_file(search_path, r"find_package(BZip2 REQUIRED)", r"find_package(bzip2 REQUIRED)")
         tools.replace_in_file(search_path, r"list(APPEND THIRDPARTY_LIBS ${BZIP2_LIBRARIES})", r"list(APPEND THIRDPARTY_LIBS bzip2::bzip2)")
 
@@ -61,7 +62,11 @@ class RocksDBConan(ConanFile):
         cmake.definitions["WITH_TESTS"] = "OFF"
         #cmake.definitions["DISABLE_STALL_NOTIF"] = True
         cmake.definitions["WITH_BENCHMARK_TOOLS"] = "OFF"
-        
+        if self.settings.compiler == "clang":
+            cmake.definitions["CMAKE_CXX_FLAGS"] = "-Wshadow -pedantic -fvisibility-inlines-hidden -Wgnu-statement-expression, -Wgnu-zero-variadic-macro-arguments"
+        elif self.settings.compiler == "gcc":
+            cmake.definitions["CMAKE_CXX_FLAGS"] = "-Wshadow -pedantic -fvisibility-inlines-hidden"
+
         cmake.configure(
                 #source_folder=self.source_subfolder,
                 #build_folder=self.build_subfolder
