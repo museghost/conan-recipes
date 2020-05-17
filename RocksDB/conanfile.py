@@ -62,8 +62,9 @@ class RocksDBConan(ConanFile):
         cmake.definitions["WITH_TESTS"] = "OFF"
         #cmake.definitions["DISABLE_STALL_NOTIF"] = True
         cmake.definitions["WITH_BENCHMARK_TOOLS"] = "OFF"
-        if self.settings.compiler == "clang":
-            cmake.definitions["CMAKE_CXX_FLAGS"] = "-Wshadow -pedantic -fvisibility-inlines-hidden -Wgnu-statement-expression, -Wgnu-zero-variadic-macro-arguments"
+        
+        if self.settings.compiler in ["apple-clang", "clang"]:
+            cmake.definitions["CMAKE_CXX_FLAGS"] = "-Wshadow -fvisibility-inlines-hidden"
         elif self.settings.compiler == "gcc":
             cmake.definitions["CMAKE_CXX_FLAGS"] = "-fvisibility-inlines-hidden"
 
