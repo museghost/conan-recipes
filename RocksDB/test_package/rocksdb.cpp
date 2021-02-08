@@ -12,7 +12,7 @@ int main()
 
   assert(status.ok());
 
-  delete db;
+  delete db; // resolved pure virtual method called issue 
 
   return 0;
 }

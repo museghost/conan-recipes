@@ -3,8 +3,8 @@ import os
 
 class RocksdbTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    options = {"stdcxx":[11,14], "fPIC":[True, False]}
-    default_options = "stdcxx=14", "fPIC=True"
+    options = {"stdcxx":[11,14,17], "fPIC":[True, False], "shared":[True, False]}
+    default_options = "stdcxx=17", "fPIC=True", "shared=False"
     generators = "cmake"
 
     def configure(self):

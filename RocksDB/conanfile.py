@@ -8,8 +8,8 @@ class RocksDBConan(ConanFile):
     url = "https://github.com/facebook/rocksdb/"
     description = "A library that provides an embeddable, persistent key-value store for fast storage."
     settings = "os", "compiler", "build_type", "arch"
-    options = {"stdcxx":[11,14], "shared":[True, False], "fPIC":[True, False]}
-    default_options = {"stdcxx":14, "shared": False, "fPIC": True}
+    options = {"stdcxx":[11,14,17], "shared":[True, False], "fPIC":[True, False]}
+    default_options = {"stdcxx":17, "shared": False, "fPIC": True}
     generators = ["cmake", "cmake_find_package", "cmake_paths"]
     #source_subfolder = "rocksdb-%s"% version
     source_subfolder = "source_subfolder"
@@ -31,8 +31,8 @@ class RocksDBConan(ConanFile):
         os.rename("rocksdb-{}".format(self.version), self.source_subfolder)
 
     def requirements(self):
-        self.requires("zlib/1.2.11@conan/stable")
-        self.requires("bzip2/1.0.8@conan/stable")
+        self.requires("zlib/1.2.11")
+        self.requires("bzip2/1.0.8")
         self.requires("lz4/1.9.2")
         self.requires("gflags/2.2.2")
         self.requires("snappy/1.1.8")
@@ -41,11 +41,14 @@ class RocksDBConan(ConanFile):
     def build(self):
         # temp patch
         search_path = "{0}/CMakeLists.txt".format(self.source_subfolder)
-        if self.settings.os == "Macos":
-            tools.replace_in_file(search_path, r"find_package(ZLIB REQUIRED)", r"find_package(zlib REQUIRED)")
-            tools.replace_in_file(search_path, r"ZLIB::ZLIB", r"zlib::zlib")
-        tools.replace_in_file(search_path, r"find_package(BZip2 REQUIRED)", r"find_package(bzip2 REQUIRED)")
-        tools.replace_in_file(search_path, r"list(APPEND THIRDPARTY_LIBS ${BZIP2_LIBRARIES})", r"list(APPEND THIRDPARTY_LIBS bzip2::bzip2)")
+        #if self.settings.os == "Macos":
+        #    tools.replace_in_file(search_path, r"find_package(ZLIB REQUIRED)", r"find_package(zlib REQUIRED)")
+        #    tools.replace_in_file(search_path, r"ZLIB::ZLIB", r"zlib::zlib")
+        #tools.replace_in_file(search_path, r"find_package(BZip2 REQUIRED)", r"find_package(bzip2 REQUIRED)")
+        #tools.replace_in_file(search_path, r"list(APPEND THIRDPARTY_LIBS ${BZIP2_LIBRARIES})", r"list(APPEND THIRDPARTY_LIBS bzip2::bzip2)")
+        tools.replace_in_file(search_path, r"BZIP2_INCLUDE_DIRS", r"BZip2_INCLUDE_DIRS")
+        tools.replace_in_file(search_path, r"BZIP2_INCLUDE_DIR", r"BZip2_INCLUDE_DIR")        
+        tools.replace_in_file(search_path, r"list(APPEND THIRDPARTY_LIBS ${BZIP2_LIBRARIES})", r"list(APPEND THIRDPARTY_LIBS ${BZip2_LIBRARIES})")
 
         cmake = CMake(self, parallel=True)
         
@@ -60,7 +63,7 @@ class RocksDBConan(ConanFile):
         cmake.definitions["WITH_CORE_TOOLS"] = "ON"
         cmake.definitions["WITH_TOOLS"] = "ON"
         cmake.definitions["WITH_TESTS"] = "OFF"
-        #cmake.definitions["DISABLE_STALL_NOTIF"] = True
+        cmake.definitions["DISABLE_STALL_NOTIF"] = "ON"
         cmake.definitions["WITH_BENCHMARK_TOOLS"] = "OFF"
         
         if self.settings.compiler in ["apple-clang", "clang"]:

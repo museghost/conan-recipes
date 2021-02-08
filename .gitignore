@@ -1,2 +1,24 @@
 *.pyc
 */test_package/build/
+
+# project
+buildnumber
+src/version.h
+build/**
+**/build-debug/**
+**/build-release/**
+nbproject/**pi
+run/**
+*.log**
+*.xml
+*nbproject*
+*.swp
+/version.toml
+cmake/FindCustom**
+.vscode
+_microakka/**
+_protoactor/**
+_akka_branch/**
+_rev**/**
+_old/**
+package/**
